@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+var fs = require("fs");
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
@@ -13,6 +14,7 @@ var app = express();
 // Set up mongoose connection
 require("dotenv").config();
 const mongoose = require("mongoose");
+const { handlebars } = require("hbs");
 mongoose.set("strictQuery", false);
 
 main().catch((err) => console.log(err));
@@ -49,5 +51,9 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
+// Register handlebar
+const sidebarhbs = handlebars.compile(fs.readFileSync("./views/sidebar.hbs", 'utf-8'));
+handlebars.registerPartial('sidebar', sidebarhbs);
 
 module.exports = app;
