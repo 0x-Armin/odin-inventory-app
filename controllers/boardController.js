@@ -36,7 +36,15 @@ exports.index = (req, res) => {
 };
 
 exports.board_list = (req, res) => {
-  res.send("NOT IMPLEMENTED: Board list");
+  Board.find({})
+       .sort({ name: 1 })
+       .populate("category")
+       .then((list_board) => {
+        res.render("board_list", { title: "List of boards", board_list: list_board });
+       })
+       .catch((err) => {
+        return next(err);
+       });
 };
 
 exports.board_detail = (req, res) => {

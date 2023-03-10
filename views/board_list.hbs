@@ -1,0 +1,22 @@
+<div class="app-container">
+  {{> sidebar }}
+  <div class="detail-container">
+    <h1>{{title}}</h1>
+    <p>Welcome to {{title}}. Inventory management made easy, so that you can focus on growing your business. 😉</p>
+    {{#if board_list}}
+    <ul>
+      {{#each board_list}}
+      <li>
+        <a href={{this.url}}>{{this.name}}</a>
+        <p>{{this.description}}</p>
+        <p>Category: {{this.category.name}}</p>
+        <p>Price: ${{this.price}}</p>
+        <p>Number in stock: {{this.numInStock}}</p>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p>Empty inventory!</p>
+    {{/if}}
+  </div>
+</div>

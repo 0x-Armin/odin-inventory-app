@@ -1,4 +1,6 @@
 body {
+  background-color: black;
+  color: #fff;
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
@@ -17,6 +19,6 @@ a {
 }
 
 .sidebar a {
-  color: #000000;
+  color: #fff;
   text-decoration: none;
 }
