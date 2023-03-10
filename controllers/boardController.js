@@ -1,5 +1,9 @@
 const Board = require("../models/board");
 
+exports.index = (req, res) => {
+  res.send("NOT IMPLEMENTED: Site Home Page");
+};
+
 exports.board_list = (req, res) => {
   res.send("NOT IMPLEMENTED: Board list");
 };
@@ -8,7 +12,7 @@ exports.board_detail = (req, res) => {
   res.send("NOT IMPLEMENTED: Board detail");
 };
 
-exports.borad_create_get = (req, res) => {
+exports.board_create_get = (req, res) => {
   res.send("NOT IMPLEMENTED");
 };
 
