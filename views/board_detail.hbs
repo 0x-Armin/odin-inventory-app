@@ -1,0 +1,10 @@
+<div class="app-container">
+  {{> sidebar }}
+  <div class="detail-container">
+   <h1><a href={{this.url}}>{{this.name}}</a></h1>
+    <p>Description: {{this.description}}</p>
+    <p>Category: {{this.category.name}}</p>
+    <p>Price: ${{this.price}}</p>
+    <p>Number in stock: {{this.numInStock}}</p>
+  </div>
+</div>

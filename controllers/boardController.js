@@ -47,8 +47,35 @@ exports.board_list = (req, res) => {
        });
 };
 
-exports.board_detail = (req, res) => {
-  res.send("NOT IMPLEMENTED: Board detail");
+exports.board_detail = (req, res, next) => {
+  async.parallel(
+    {
+      async board() {
+        try {
+          const board = await Board.findById(req.params.id);
+          return board;
+        } catch (err) {
+          return err;
+        }
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.board == null) {
+        const err = new Error("Board not found");
+        err.status = 404;
+        return next(err);
+      }
+
+      res.render("board_detail", {
+        name: results.board.name,
+        description: results.board.description,
+        category: results.board.category,
+        price: results.board.price,
+        numInStock: results.board.numInStock,
+      });
+    }
+  );
 };
 
 exports.board_create_get = (req, res) => {
