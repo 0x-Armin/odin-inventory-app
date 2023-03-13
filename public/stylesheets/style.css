@@ -24,3 +24,15 @@ a {
   color: #fff;
   text-decoration: none;
 }
+
+.form-container {
+  max-width: 30%;
+}
+
+.form-container div {
+  margin: 12px auto;
+}
+
+.form-container input[type=text] {
+  float: right;
+}

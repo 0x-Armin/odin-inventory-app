@@ -1,0 +1,39 @@
+<div class="app-container">
+  {{> sidebar }}
+  <div class="form-container">
+    <h1>{{title}}</h1>
+
+    <form method="post" action="">
+      <div>
+        <label>
+          Category:
+          {{#if category.name}}
+          <input type="text" name="name" value={{category.name}} />
+          {{else}}
+          <input type="text" name="name" value='' />
+          {{/if}}
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Description:
+          {{#if category.description}}
+          <input type="text" name="description" value={{category.description}} />
+          {{else}}
+          <input type="text" name="description" value='' />
+          {{/if}}
+        </label>
+      </div>
+      <input type="submit" value="Submit form" />
+    </form>
+
+    {{#if errors}}
+    <ul>
+      {{#each errors}}
+      <li>{{this.msg}}</li>
+      {{/each}}
+    </ul>
+    {{/if}}
+  </div>
+</div>

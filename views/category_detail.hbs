@@ -2,6 +2,7 @@
   {{> sidebar }}
   <div class="detail-container">
     <h1>{{title}}</h1>
+    <h2>{{category.name}}</h2>
     {{#if category_board}}
     <ul>
       {{#each category_board}}
@@ -13,7 +14,7 @@
       {{/each}}
     </ul>
     {{else}}
-    <p>This category has no boards</p>
+    <p>This category has no boards.</p>
     {{/if}}
   </div>
 </div>
