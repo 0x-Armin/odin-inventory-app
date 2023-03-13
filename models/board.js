@@ -11,7 +11,7 @@ const BoardSchema = new Schema({
 });
 
 BoardSchema.virtual("url").get(function() {
-  return `/catalog/board/${this._id}`;
+  return `/inventory/board/${this._id}`;
 });
 
 module.exports = mongoose.model("Board", BoardSchema);

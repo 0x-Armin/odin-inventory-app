@@ -1,4 +1,7 @@
 const Category = require("../models/category");
+const Board = require("../models/board");
+
+const async = require("async");
 
 exports.category_list = (req, res) => {
   Category.find()
@@ -10,8 +13,40 @@ exports.category_list = (req, res) => {
           })
 };
 
-exports.category_detail = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+exports.category_detail = (req, res, next) => {
+  async.parallel(
+    {
+      async category() {
+        try {
+          const category = await Category.findById(req.params.id);
+          return category;
+        } catch (err) {
+          return err;
+        }
+      },
+      async category_board() {
+        try {
+          const board = await Board.find( { category: req.params.id });
+          return board;
+        } catch (err) {
+          return err;
+        }
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.category == null) {
+        const err = new Error("Category not found");
+        err.status = 404;
+        return next(err);
+      }
+      res.render("category_detail", {
+        title: "Category Detail",
+        category: results.category,
+        category_board: results.category_board,
+      });
+    }
+  );
 };
 
 exports.category_create_get = (req, res) => {

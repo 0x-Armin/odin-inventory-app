@@ -2,20 +2,18 @@
   {{> sidebar }}
   <div class="detail-container">
     <h1>{{title}}</h1>
-    {{#if board_list}}
+    {{#if category_board}}
     <ul>
-      {{#each board_list}}
+      {{#each category_board}}
       <li>
         <a href={{this.url}}>{{this.name}}</a>
         <p>{{this.description}}</p>
-        <p>Category: {{this.category.name}}</p>
-        <p>Price: ${{this.price}}</p>
         <p>Number in stock: {{this.numInStock}}</p>
       </li>
       {{/each}}
     </ul>
     {{else}}
-    <p>Empty inventory!</p>
+    <p>This category has no boards</p>
     {{/if}}
   </div>
 </div>

@@ -62,7 +62,7 @@ async function categoryCreate(name, description, cb) {
 function createCategories(cb) {
   async.series([
     function(callback) {
-      categoryCreate('Skatebord', 'Sports equipment for skateboarding', callback);
+      categoryCreate('Skateboard', 'Sports equipment for skateboarding', callback);
     },
     function(callback) {
       categoryCreate('Longboard', 'Sports equipment for longboarding', callback);

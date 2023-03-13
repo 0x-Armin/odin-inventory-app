@@ -14,7 +14,9 @@ a {
   grid-template-columns: minmax(200px, 1fr) 4fr;
 }
 
-.sidebar li {
+.sidebar ul,
+.detail-container ul {
+  padding-left: 0;
   list-style-type: none;
 }
 
