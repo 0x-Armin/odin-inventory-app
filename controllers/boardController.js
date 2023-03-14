@@ -78,13 +78,94 @@ exports.board_detail = (req, res, next) => {
   );
 };
 
-exports.board_create_get = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+exports.board_create_get = (req, res, next) => {
+  // Get all categories to classify new board
+  async.parallel(
+    {
+      async categories() {
+        try {
+          const categories = await Category.find();
+          return categories;
+        } catch (err) {
+          return err;
+        }
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      res.render("board_form", {
+        title: "Create Board",
+        categories: results.categories,
+      });
+    }
+  );
 };
 
-exports.board_create_post = (req, res) => {
-  res.send("NOT IMPLEMENTED");
-};
+exports.board_create_post = [
+  body("name", "Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description", "Description must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category", "Must pick a category.")
+    .escape()
+    .isLength({ min: 1 }),
+  body("price", "Price must not be empty.")
+    .trim()
+    .isNumeric()
+    .escape(),
+  body("numInStock", "Number in stock must not be empty.")
+    .trim()
+    .isNumeric({ no_symbols: true  }),
+
+  async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const board = new Board({
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      numInStock: req.body.numInStock,
+    });
+
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          async categories() {
+            try {
+              const categories = await Category.find();
+              return categories;
+            } catch (err) {
+              return err;
+            }
+          },
+        },
+        (err, results) => {
+          if (err) return next(err);
+          console.log(board.name)
+          res.render("board_form", {
+            title: "Create Board",
+            categories: results.categories,
+            board, 
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    try {
+      await board.save();
+      res.redirect(board.url);
+    } catch (err) {
+      return next(err);
+    }
+  }
+];
 
 exports.board_delete_get = (req, res) => {
   res.send("NOT IMPLEMENTED");

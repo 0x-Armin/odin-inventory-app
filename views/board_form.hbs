@@ -1,0 +1,79 @@
+<div class="app-container">
+  {{> sidebar }}
+  <div class="form-container">
+    <h1>{{title}}</h1>
+
+    <form method="post" action="">
+      <div>
+        <label>
+          Name:
+          {{#if board.name}}
+          <input type="text" name="name" value="{{board.name}}" />
+          {{else}}
+          <input type="text" name="name" value='' />
+          {{/if}}
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Description:
+          {{#if board.description}}
+          <input type="text" name="description" value="{{board.description}}" />
+          {{else}}
+          <input type="text" name="description" value='' />
+          {{/if}}
+        </label>
+      </div>
+
+      <div>
+        <fieldset>
+          <legend>Select a category for this product:</legend>
+          {{#each categories}}
+          <div>
+            {{#ifeq ../board.category_str this._id }}
+              <input type="radio" id={{this._id}} name="category" value={{this._id}} checked>
+            {{/ifeq}}
+            {{#ifnoteq ../board.category_str this._id}}
+              <input type="radio" id={{this._id}} name="category" value={{this._id}} required>
+            {{/ifnoteq}}
+            <label for={{this._id}}>{{this.name}}</label>
+            </div>
+          {{/each}}
+        </fieldset>
+      </div>
+
+      <div>
+        <label>
+          Price:
+          {{#if board.price}}
+            <input type="number" id="price" name="price" step="0.01" min="0" value={{board.price}}> 
+          {{else}}
+            <input type="number" id="price" name="price" step="0.01" min="0">
+          {{/if}}
+        </label>
+      </div>
+
+      <div>
+        <label>
+          Number in stock:
+          {{#if board.numInStock}}
+            <input type="number" id="numInStock" name="numInStock" min="0" value={{board.numInStock}}>
+          {{else}}
+            <input type="number" id="numInStock" name="numInStock" min="0">
+          {{/if}}
+        </label>
+      </div>
+
+      <input type="submit" value="Submit form" />
+    </form>
+
+    {{#if errors}}
+    <ul>
+      {{#each errors}}
+      <li>{{this.msg}}</li>
+      {{/each}}
+    </ul>
+    {{/if}}
+  </div>
+</div>

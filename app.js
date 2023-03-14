@@ -53,7 +53,23 @@ app.use(function (err, req, res, next) {
 });
 
 // Register handlebar
-const sidebarhbs = handlebars.compile(fs.readFileSync("./views/sidebar.hbs", 'utf-8'));
-handlebars.registerPartial('sidebar', sidebarhbs);
+const sidebarhbs = handlebars.compile(
+  fs.readFileSync("./views/sidebar.hbs", "utf-8")
+);
+handlebars.registerPartial("sidebar", sidebarhbs);
+
+handlebars.registerHelper("ifeq", function (a, b, options) {
+  if (a == b) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
+
+handlebars.registerHelper("ifnoteq", function (a, b, options) {
+  if (a != b) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
 
 module.exports = app;
