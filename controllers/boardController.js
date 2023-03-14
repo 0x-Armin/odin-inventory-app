@@ -52,7 +52,8 @@ exports.board_detail = (req, res, next) => {
     {
       async board() {
         try {
-          const board = await Board.findById(req.params.id);
+          const board = await Board.findById(req.params.id)
+                                    .populate("category");
           return board;
         } catch (err) {
           return err;
@@ -67,12 +68,9 @@ exports.board_detail = (req, res, next) => {
         return next(err);
       }
 
+      console.log(results.board);
       res.render("board_detail", {
-        name: results.board.name,
-        description: results.board.description,
-        category: results.board.category,
-        price: results.board.price,
-        numInStock: results.board.numInStock,
+        board: results.board,
       });
     }
   );
@@ -167,12 +165,34 @@ exports.board_create_post = [
   }
 ];
 
-exports.board_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+exports.board_delete_get = (req, res, next) => {
+  async.parallel(
+    {
+      async board() {
+        const board = await Board.findById(req.params.id);
+        return board;
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.board == null) res.redirect("/inventory/boards");
+
+      res.render("board_delete", {
+        title: "Delete Board",
+        board: results.board,
+      });
+    }
+  );
 };
 
-exports.board_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+exports.board_delete_post = (req, res, next) => {
+  Board.findByIdAndRemove(req.body.boardid)
+        .then(() => {
+          res.redirect("/inventory/boards");
+        })
+        .catch((err) => {
+          return next(err);
+        });
 };
 
 exports.board_update_get = (req, res) => {

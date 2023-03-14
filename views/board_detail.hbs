@@ -1,10 +1,12 @@
 <div class="app-container">
   {{> sidebar }}
   <div class="detail-container">
-   <h1><a href={{this.url}}>{{this.name}}</a></h1>
-    <p>Description: {{this.description}}</p>
-    <p>Category: {{this.category.name}}</p>
-    <p>Price: ${{this.price}}</p>
-    <p>Number in stock: {{this.numInStock}}</p>
+    <h1><a href={{board.url}}>{{board.name}}</a></h1>
+    <p>Description: {{board.description}}</p>
+    <p>Category: {{board.category.name}}</p>
+    <p>Price: ${{board.price}}</p>
+    <p>Number in stock: {{board.numInStock}}</p>
+
+    <p><a href={{board.url_del}}>Delete board</a></p>
   </div>
 </div>

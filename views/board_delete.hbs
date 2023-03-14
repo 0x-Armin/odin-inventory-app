@@ -1,0 +1,14 @@
+<div class="app-container">
+  {{> sidebar }}
+  <div class="detail-container">
+    <h1>{{title}}: {{board.name}}</h1>
+    <p>{{board.description}}</p>
+
+    <p>Do you really want to delete this board?</p>
+
+    <form method="post" action="">
+      <input id="boardid" type="hidden" name="boardid", required="true" value={{board._id}}>
+      <input type="submit" value="Delete">
+    </form>
+  </div>
+</div>

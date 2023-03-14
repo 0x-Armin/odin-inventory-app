@@ -14,6 +14,10 @@ BoardSchema.virtual("url").get(function() {
   return `/inventory/board/${this._id}`;
 });
 
+BoardSchema.virtual("url_del").get(function() {
+  return `/inventory/board/${this._id}/delete`;
+})
+
 BoardSchema.virtual("category_str").get(function() {
   return this.category.toString();
 })
