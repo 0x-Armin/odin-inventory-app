@@ -25,7 +25,6 @@ exports.index = (req, res) => {
       },
     },
     (err, results) => {
-      console.log("trying to render");
       res.render("index", {
         title: "Inventory Application",
         error: err,
@@ -68,7 +67,6 @@ exports.board_detail = (req, res, next) => {
         return next(err);
       }
 
-      console.log(results.board);
       res.render("board_detail", {
         board: results.board,
       });
@@ -195,10 +193,95 @@ exports.board_delete_post = (req, res, next) => {
         });
 };
 
-exports.board_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+exports.board_update_get = (req, res, next) => {
+  async.parallel(
+    {
+      async board() {
+        const board = await Board.findById(req.params.id);
+        return board;
+      },
+      async categories() {
+        const categories = await Category.find();
+        return categories;
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.board == null) {
+        const err = new Error("Board not found");
+        err.status = 404;
+        return next(err);
+      }
+
+      res.render("board_form", {
+        title: "Update Board",
+        categories: results.categories,
+        board: results.board,
+      });
+    }
+  );
 };
 
-exports.board_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED");
-};
+exports.board_update_post = [
+  body("name", "Name must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("description", "Description must not be empty.")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("category", "Must pick a category.")
+    .escape()
+    .isLength({ min: 1 }),
+  body("price", "Price must not be empty.")
+    .trim()
+    .isNumeric()
+    .escape(),
+  body("numInStock", "Number in stock must not be empty.")
+    .trim()
+    .isNumeric({ no_symbols: true  }),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+
+    // Create new board with escaped/trimmed data
+    const board = new Board({
+      name: req.body.name,
+      description: req.body.description,
+      category: req.body.category,
+      price: req.body.price,
+      numInStock: req.body.numInStock,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      async.parallel(
+        {
+          async categories() {
+            const categories = await Category.find();
+            return categories;
+          },
+        },
+        (err, results) => {
+          if (err) return next(err);
+          res.render("board_form", {
+            title: "Update Board",
+            categories: results.categories,
+            board,
+            errors: errors.array(),
+          });
+        }
+      );
+      return;
+    }
+
+    Board.findByIdAndUpdate(req.params.id, board, {})
+          .then((theboard) => {
+            res.redirect(theboard.url);
+          })
+          .catch((err) => {
+            return next(err)
+          });
+  },
+];
