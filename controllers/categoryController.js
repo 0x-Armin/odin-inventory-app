@@ -148,9 +148,70 @@ exports.category_delete_post = (req, res, next) => {
 };
 
 exports.category_update_get = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+  async.parallel(
+    {
+      async category() {
+        const category = await Category.findById(req.params.id);
+        return category;
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.category == null) {
+        const err = new Error("Category not found");
+        err.status = 404;
+        return next(err);
+      }
+      res.render("category_form", {
+        title: "Update Category",
+        category: results.category,
+      });
+    }
+  );
 };
 
-exports.category_update_post = (req, res) => {
-  res.send("NOT IMPLEMENTED");
-};
+exports.category_update_post = [
+  body("name", "Category name required")
+      .trim()
+      .isLength({ min: 1 })
+      .escape(),
+  body("description", "Description required")
+      .trim()
+      .isLength({ min: 1 })
+      .escape(),
+
+  (req, res, next) => {
+    const errors = validationResult(req);
+    const category = new Category({
+      name: req.body.name,
+      _id: req.params.id,
+    });
+
+    if (!errors.isEmpty()) {
+      res.render("category_form", {
+        title: "Update Category",
+        category,
+        errors: errors.array(),
+      });
+      return;
+    } else {
+      Category.findOne({ name: req.body.name })
+              .then(async (found_category) => {
+                if (found_category) {
+                  res.redirect(found_category);
+                } else {
+                  Category.findByIdAndUpdate(req.params.id, category, {})
+                          .then((thecategory) => {
+                            res.redirect(thecategory.url);
+                          })
+                          .catch(err => {
+                            return next(err);
+                          });
+                }
+              })
+              .catch(err => {
+                return next(err);
+              });
+    }
+  },
+];

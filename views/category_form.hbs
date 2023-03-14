@@ -8,7 +8,7 @@
         <label>
           Category:
           {{#if category.name}}
-          <input type="text" name="name" value={{category.name}} />
+          <input type="text" name="name" value="{{category.name}}" />
           {{else}}
           <input type="text" name="name" value='' />
           {{/if}}
@@ -19,7 +19,7 @@
         <label>
           Description:
           {{#if category.description}}
-          <input type="text" name="description" value={{category.description}} />
+          <input type="text" name="description" value="{{category.description}}" />
           {{else}}
           <input type="text" name="description" value='' />
           {{/if}}
