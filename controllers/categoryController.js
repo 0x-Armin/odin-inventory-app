@@ -88,12 +88,63 @@ exports.category_create_post = [
   },
 ];
 
-exports.category_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+exports.category_delete_get = (req, res, next) => {
+  async.parallel(
+    {
+      async category() {
+        const category = await Category.findById(req.params.id);
+        return category;
+      },
+      async category_boards() {
+        const boards = await Board.find({ category: req.params.id });
+        return boards;
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.category == null) res.redirect("/inventory/categories");
+
+      res.render("category_delete", {
+        title: "Delete Category",
+        category: results.category,
+        category_boards: results.category_boards,
+      });
+    }
+  );
 };
 
-exports.category_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED");
+exports.category_delete_post = (req, res, next) => {
+  async.parallel(
+    {
+      async category() {
+          const category = await Category.findById(req.body.categoryid);
+          return category;
+        },
+      async category_boards() {
+        const boards = await Board.find({ category: req.body.categoryid });
+        return boards;
+      },
+    },
+    (err, results) => {
+      if (err) return next(err);
+      if (results.category_boards.length > 0) {
+        res.render("category_delete", {
+          title: "Delete Category",
+          category: results.category,
+          category_boards: results.category_boards,
+        });
+        return;
+      }
+
+      Category.findByIdAndRemove(req.body.categoryid)
+              .then(() => {
+                res.redirect("/inventory/categories");
+              })
+              .catch((err) => {
+                return next(err);
+              });
+    }
+  );
 };
 
 exports.category_update_get = (req, res) => {

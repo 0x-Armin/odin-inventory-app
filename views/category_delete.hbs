@@ -1,0 +1,25 @@
+<div class="app-container">
+  {{> sidebar }}
+  <div class="detail-container">
+    <h1>{{title}}: {{category.name}}</h1>
+    <p>{{category.description}}</p>
+    {{#if category_boards}}
+    <p><strong>Delete the following boards before attempting to delete this category.</strong></p>
+    <h4>Boards</h4>
+    <ul>
+      {{#each category_boards}}
+      <li>
+        <a href={{this.url}}>{{this.name}}</a>
+        <p>{{this.description}}</p>
+      </li>
+      {{/each}}
+    </ul>
+    {{else}}
+    <p>Do you really want to delete this category?</p>
+    <form method="POST" action="">
+      <input id="categoryid" type="hidden" name="categoryid" required="true" value={{category._id}}>
+      <input type="submit" value="Delete">
+    </form>
+    {{/if}}
+  </div>
+</div>

@@ -11,4 +11,8 @@ CategorySchema.virtual("url").get(function() {
   return `/inventory/category/${this._id}`;
 });
 
+CategorySchema.virtual("url_del").get(function() {
+  return `/inventory/category/${this._id}/delete`;
+})
+
 module.exports = mongoose.model("Category", CategorySchema);
